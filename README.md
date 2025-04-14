@@ -37,6 +37,6 @@ This project reflects a comprehensive approach to personal health management and
 - **Frontend**: Angular, TypeScript, HTML, CSS
 - **Backend**: Java, Spring Boot, REST API, Maven
 - **Database**: Firebase Firestore
-- **Authentication**: Firebase Authentication (planned)
+- **Authentication**: Firebase Authentication
 - **Data Format**: XML for patient health information
 - **Future Enhancements**: MQTT for IoT devices, Firebase Cloud Messaging for notifications, real-time charts and analytics
