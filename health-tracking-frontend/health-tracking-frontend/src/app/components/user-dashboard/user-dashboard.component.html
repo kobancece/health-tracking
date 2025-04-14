@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+</head>
+<body>
+  <h2 class="section-title">Health Information</h2>
+  <form [formGroup]="healthForm" class="health-info-form">
+    <table class="health-info-table">
+      <thead>
+        <tr>
+          <th>Weight (kg)</th>
+          <th>Height (cm)</th>
+          <th>Blood Pressure</th>
+          <th>Heart Rate</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="!isEditing">
+          <td>{{ healthForm.value.weight || 'N/A' }}</td>
+          <td>{{ healthForm.value.height || 'N/A' }}</td>
+          <td>{{ healthForm.value.bloodPressure || 'N/A' }}</td>
+          <td>{{ healthForm.value.heartRate || 'N/A' }}</td>
+          <td><button class="btn-primary" (click)="editHealthData()">Edit</button></td>
+        </tr>
+        <tr *ngIf="isEditing">
+          <td>
+            <input class="info-input" type="number" formControlName="weight" />
+          </td>
+          <td>
+            <input class="info-input" type="number" formControlName="height" />
+          </td>
+          <td>
+            <input class="info-input" type="text" formControlName="bloodPressure" />
+          </td>
+          <td>
+            <input class="info-input" type="number" formControlName="heartRate" />
+          </td>
+          <td>
+            <button class="btn-success" (click)="saveHealthRecord()">Save</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  <h2 class="section-title">Doctors</h2>
+  <div class="filter-container">
+    <label for="specialization" class="form-label">Select Specialization:</label>
+    <select id="specialization" [(ngModel)]="selectedSpecialization" (change)="filterDoctors()" class="custom-select">
+      <option value="">-- Select Specialization --</option>
+      <option *ngFor="let specialization of specializations" [value]="specialization">
+        {{ specialization }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="filteredDoctors.length > 0">
+    <h3 class="subsection-title">Available Doctors</h3>
+    <ul class="doctor-list">
+      <li *ngFor="let doctor of filteredDoctors">
+        <span>{{ doctor.firstName }} {{ doctor.lastName }} ({{ doctor.username }})</span>
+        <button class="btn-primary" (click)="toggleMessageBox(doctor)">Message</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="selectedDoctor" class="message-box">
+    <h3>Send Message to {{ selectedDoctor.firstName }} {{ selectedDoctor.lastName }}</h3>
+    <textarea [(ngModel)]="messageText" placeholder="Write your message" class="message-textarea"></textarea>
+    <div class="message-actions">
+      <button class="btn-success" (click)="sendMessage()">Send</button>
+      <button class="btn-secondary" (click)="cancelMessage()">Cancel</button>
+    </div>
+  </div>
+
+  <p *ngIf="messageSent" class="success-message">Message sent successfully!</p>
+
+  <button class="btn-secondary sent-messages-button" (click)="viewSentMessages()">View Sent Messages</button>
+
+  <div *ngIf="showSentMessages" class="sent-messages">
+    <h3>Sent Messages</h3>
+    <ul>
+      <li *ngFor="let message of sentMessages">
+        <div class="sent-message-item">
+          <strong>Text:</strong> {{ message.text }} <br />
+          <strong>To:</strong> {{ message.to }}
+        </div>
+      </li>
+    </ul>
+    <button class="btn-secondary" (click)="closeSentMessages()">Close</button>
+  </div>
+
+  <h2 class="section-title">Messages</h2>
+  <div *ngFor="let message of messages" class="message-item">
+    <p>{{ message.messageText }} - <strong>From:</strong> {{ message.senderRole === 'DOCTOR' ? 'Doctor' : 'User' }}</p>
+  </div>
+
+  <!-- Message Details Section -->
+  <div class="message-details" *ngIf="selectedMessage" style="margin-left: 10px;">
+    <p><strong>Message:</strong> {{ selectedMessage.messageText }}</p>
+    <p><strong>From:</strong> {{ selectedMessage.senderRole === 'DOCTOR' ? 'Doctor' : 'User' }}</p>
+    <button class="btn-secondary" (click)="closeMessageDetails()">Close</button>
+  </div>
+
+  <button class="btn-secondary back-button" (click)="navigateToHome()">Back to Home</button>
+
+  
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard</title>
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1 class="title">Doctor Dashboard</h1>
+
+    <!-- Hastalar Listesi -->
+    <mat-card class="patient-card">
+      <mat-card-title>Patients</mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let patient of patients">
+            {{ patient.firstName }} {{ patient.lastName }} ({{ patient.username }})
+            <button (click)="downloadPatientInfo(patient.id)">Download Info</button>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Mesajlar -->
+    <mat-card class="message-card">
+      <mat-card-title>Messages</mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item
+            *ngFor="let message of messages"
+            [class.unread]="!message.read"
+            (click)="selectMessage(message)"
+          >
+            {{ message.messageText }} - From: {{ message.senderUsername || 'Unknown' }}
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seçilen Mesaj Detayları -->
+    <div *ngIf="selectedMessage" class="message-details">
+      <h2>Message Details</h2>
+      <p><strong>From:</strong> {{ selectedMessage.senderUsername || 'Unknown' }}</p>
+      <p><strong>Message:</strong> {{ selectedMessage.messageText }}</p>
+      <textarea [(ngModel)]="replyText" placeholder="Write your reply here"></textarea>
+      <button (click)="sendReply()">Reply</button>
+      <button (click)="closeMessage()">Close</button>
+    </div>
+  </div>
+</body>
+</html>
